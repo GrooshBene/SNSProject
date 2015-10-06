@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Login Page</title>
+</head>
+
+<body>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://127.0.0.1/socket.io/socket.io.js"></script><!--소켓이오 사용시 가장 중요 -->
+  <script type="text/javascript">
+  var socket = io.connect('http://localhost');//소켓 연결
+  socket.on('session', function (data) {//소켓에서 메시지1이라는 이름의 메시지가 도착했을때
+    welcome.innerHTML = data.user_id;//데이타 안에서 받아와서 출력
+  });
+  </script>
+  <li id="welcome"></li>
+  <form id="login" method="post" action="/login" enctype="application/x-www-form-urlencoded">
+    <input type="text" name="id">
+    <input type="password" name="pw">
+    <input type="submit" value="LogIn">
+  </form>
+  <form action="/signin">
+    <input type="submit" value="Sign In">
+  </form>
+</body>
+
+</html>
