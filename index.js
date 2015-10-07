@@ -57,8 +57,8 @@ var loginSchema = new schema({
 });
 
 var articleSchema = new schema({
-  user_number : {
-    type : Number
+  user_name : {
+    type : String
   },
   user_article : {
     type : String
@@ -68,19 +68,20 @@ var articleSchema = new schema({
   }
 });
 var user = mongoose.model('user', loginSchema);
+var article = mongoose.model('article', articleSchema);
 
 app.get('/', function(req, res) {
   console.log(req.session);
   if (req.session.chk == null) {
     res.sendFile(__dirname + "/login.html");
-    io.on('connection', function(socket) {
-      socket.emit('session', {
-        user_id: "Welcome!"
-      });
-    });
   } else if (req.session.chk != null) {
     res.sendFile(__dirname + "/index.html");
   }
+  io.on('connection', function(socket) {
+    socket.emit('session', {
+      user_id: req.session.user_id + " Welcome!"
+    });
+  });
 });
 
 app.get('/signin', function(req, res) {
@@ -97,7 +98,7 @@ app.post('/login', function(req, res) {
       throw err;
     }
     if (sign == null) {
-      res.send("아이디 또는 비밀번호가 틀렸습니다!");
+      res.send("정보가 잘못되었습니다!!");
     } else {
       console.log(sign);
       req.session.user_id = sign.user_id;
@@ -105,13 +106,6 @@ app.post('/login', function(req, res) {
       req.session.user_name = sign.user_name;
       req.session.chk = 1;
       console.log(req.session);
-      io.on('connection', function(socket) {
-        if (req.session.user_id != null) {
-          socket.emit('session', {
-            user_id: "User " + req.session.user_name + " Login!"
-          });
-        }
-      });
       res.redirect('/');
     }
   });
@@ -133,11 +127,47 @@ app.post('/logoutchk', function(req, res) {
 });
 
 app.post('/articlemake', function(req,res){
-  res.send("Wait~");
+  var a = new article();
+  var text = req.body.text;
+  var cnt_text = 0;
+  while(cnt_text != text.length){
+    text = text.replace("\n", "<br/>");
+    cnt_text++;
+  }
+  a.user_article = text;
+  a.user_name = req.session.user_name;
+  a.article_time = new Date;
+  if(a.user_article != null){
+    a.save(function(err, silence){
+      if(err){
+        console.log(err);
+        throw err;
+      }
+    });
+    console.log(a);
+    res.send("OK!");
+  }
 });
 
 app.post('/showarticle', function(req,res){
-  res.send("Wait~");
+  article.find({
+    'user_name' : req.session.user_name
+  }, function(err, article){
+    if(err){
+      console.err(err);
+      throw err;
+    }
+    if(req.session.user_name == null){
+      res.send("잘못된 접근입니다!");
+    }
+    if(article == null){
+      res.send("작성글이 없습니다!");
+    }
+    else{
+      console.log(article);
+      res.send(article.join('<br><br>'));
+    }
+  })
 })
 
 app.post('/signin', function(req, res) {
@@ -147,12 +177,12 @@ app.post('/signin', function(req, res) {
   sign.user_name = req.body.name;
   user.findOne({
     'user_id': req.body.id
-  }, function(err, a) {
+  }, function(err, sign) {
     if (err) {
       console.err(err);
       throw err;
     }
-    if (a == null) {
+    if (sign == null) {
       chk = true
     }
   });
