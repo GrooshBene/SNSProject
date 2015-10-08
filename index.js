@@ -39,7 +39,7 @@ var chk = "false";
 var emitText = "";
 var id;
 var pw;
-mongoose.connect("mongodb://localhost:27017/sns", function(err) {
+mongoose.connect("mongodb://grooshbene.milkgun.kr:27017/sns", function(err) {
   if (err) {
     console.log("Mongoose DB Error!");
     throw (err);
