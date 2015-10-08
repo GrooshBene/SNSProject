@@ -39,7 +39,7 @@ var chk = "false";
 var emitText = "";
 var id;
 var pw;
-mongoose.connect("mongodb://localhost:27017/sns", function(err) {
+mongoose.connect("mongodb://grooshbene.milkgun.kr:27017/sns", function(err) {
   if (err) {
     console.log("Mongoose DB Error!");
     throw (err);
@@ -149,11 +149,7 @@ app.post('/login', function(req, res) {
       throw err;
     }
     if (sign == null) {
-      dialog.info("정보가 잘못되었습니다", "Wrong ID/Password", function(err){
-        if(!err){
-          res.redirect('/');
-        }
-      })
+      res.send("정보를 다시 확인해 주세요.");
     } else {
       console.log(sign);
       req.session.user_id = sign.user_id;
@@ -201,11 +197,7 @@ app.post('/articlemake', function(req,res){
       }
     });
     console.log(a);
-    dialog.info("작성이 완료되었습니다!", "Done", function(err){
-      if(!err){
-        res.redirect('/');
-      }
-    })
+    res.redirect('/');
   }
 });
 
@@ -228,18 +220,9 @@ app.post('/signin', function(req, res) {
     }
   });
   if (sign.user_pw < 8) {
-    dialog.info("비밀번호는 8자리 이상이어야 합니다!", "Wrong Input", function(err){
-      if(!err){
-        res.redirect('/signin');
-      }
-    })
+    res.send("비밀번호는 8자리 이상이어야 합니다!");
   } else if (chk == "true") {
-    dialog.info("중복되는 아이디 입니다!","Wrong ID", function(err){
-      if(!err){
-        chk = "false";
-        res.redirect('/signin');
-      }
-    })
+    res.send("중복되는 아이디 입니다!");
   } else {
     sign.save(function(err, silence) {
       if (err) {
@@ -248,10 +231,6 @@ app.post('/signin', function(req, res) {
       }
     });
     console.log(sign);
-    dialog.info("회원가입이 완료되었습니다!", "Sign In", function(err){
-      if(!err){
-        res.redirect('/');
-      }
-    })
+    res.redirect('/');
   }
 });
