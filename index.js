@@ -39,7 +39,7 @@ var chk = "false";
 var emitText = "";
 var id;
 var pw;
-mongoose.connect("mongodb://localhost:27017/sns", function(err) {
+mongoose.connect("mongodb://grooshbene.milkgun.kr:27017/sns", function(err) {
   if (err) {
     console.log("Mongoose DB Error!");
     throw (err);
@@ -187,11 +187,6 @@ app.post('/logoutchk', function(req, res) {
 app.post('/articlemake', function(req,res){
   var a = new article();
   var text = req.param('text');
-  var cnt_text = 0;
-  while(cnt_text != text.length){
-    text = text.replace("\n", "<br/>");
-    cnt_text++;
-  }
   a.user_article = text;
   a.user_name = req.session.user_name;
   a.article_time = new Date;
