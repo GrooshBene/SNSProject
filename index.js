@@ -70,6 +70,7 @@ var articleSchema = new schema({
 var user = mongoose.model('user', loginSchema);
 var article = mongoose.model('article', articleSchema);
 
+
 app.get('/', function(req, res) {
   console.log(req.session);
   if (req.session.chk == null) {
@@ -82,6 +83,19 @@ app.get('/', function(req, res) {
       user_id: req.session.user_id + " Welcome!"
     });
   });
+  article.find({},{_id:0,user_article:1}).exec(function(err,a){
+    if(err){
+      console.log(err);
+      throw err;
+    }
+    var TimeLine = JSON.stringify(a);
+    console.log(TimeLine);
+    io.on('connection', function(socket) {
+      socket.emit('timeline', {
+        timeline: TimeLine
+      });
+    });
+  })
 });
 
 app.get('/signin', function(req, res) {
@@ -149,26 +163,6 @@ app.post('/articlemake', function(req,res){
   }
 });
 
-app.post('/showarticle', function(req,res){
-  article.find({
-    'user_name' : req.session.user_name
-  }, function(err, article){
-    if(err){
-      console.err(err);
-      throw err;
-    }
-    if(req.session.user_name == null){
-      res.send("잘못된 접근입니다!");
-    }
-    if(article == null){
-      res.send("작성글이 없습니다!");
-    }
-    else{
-      console.log(article);
-      res.send(article.join('<br><br>'));
-    }
-  })
-})
 
 app.post('/signin', function(req, res) {
   var sign = new user();
