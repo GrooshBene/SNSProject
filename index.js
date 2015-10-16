@@ -3,8 +3,8 @@ var mongoose = require('mongoose');
 var serveStatic = require('serve-static');
 var app = express();
 var server = require('http').Server(app);
-server.listen(8000);
-console.log("Server Running At Port 8000");
+server.listen(80);
+console.log("Server Running At Port 80");
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({
@@ -39,7 +39,7 @@ var chk = "false";
 var emitText = "";
 var id;
 var pw;
-mongoose.connect("mongodb://localhost:27017/sns", function(err) {
+mongoose.connect("mongodb://grooshbene.milkgun.kr:27017/sns", function(err) {
   if (err) {
     console.log("Mongoose DB Error!");
     throw (err);
@@ -76,11 +76,11 @@ var user = mongoose.model('user', loginSchema);
 var article = mongoose.model('article', articleSchema);
 
 
-app.get('/', function(req, res) {
+app.get('/', function(req, res) {	//MainPage
   console.log(req.session);
-  if (req.session.chk == null) {
+  if (req.session.chk == null) { //ifSessionNull
     res.sendFile(__dirname + "/login.html");
-  } else if (req.session.chk != null && req.session.tutor == "true") {
+  } else if (req.session.chk != null && req.session.tutor == "true") { //ifTutorial
     res.sendFile(__dirname + "/intro.html");
     user.update({
       'user_id' : req.session.user_id
@@ -108,7 +108,7 @@ app.get('/', function(req, res) {
       })
     })
   }
-  else if(req.session.chk != null && req.session.tutor == "false"){
+  else if(req.session.chk != null && req.session.tutor == "false"){ //ifMain
     res.sendFile(__dirname + "/index.html");
     article.find({},{_id:0,'user_article':1,'article_time':1,'user_name':1}).exec(function(err,a){
       if(err){
@@ -119,8 +119,8 @@ app.get('/', function(req, res) {
       var TimeLine = a;
       var length = TimeLine.length;
       var tempLength = 0;
-      io.on('connection', function(socket) {
-        for(var i=length-1; i>tempLength; i--){
+      io.on('connection', function(socket) { //TimeLine
+        for(var i=length-1; i>=tempLength; i--){
         var emit = TimeLine[i].user_article;
         var emit_name = TimeLine[i].user_name;
         var emit_time = TimeLine[i].article_time
