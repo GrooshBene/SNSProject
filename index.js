@@ -39,7 +39,7 @@ var chk = "false";
 var emitText = "";
 var id;
 var pw;
-mongoose.connect("mongodb://grooshbene.milkgun.kr:27017/sns", function(err) {
+mongoose.connect("mongodb://localhost:27017/sns", function(err) {
   if (err) {
     console.log("Mongoose DB Error!");
     throw (err);
@@ -141,8 +141,8 @@ app.get('/signin', function(req, res) {
 
 app.post('/login', function(req, res) {
   user.findOne({
-    'user_id': req.body.id,
-    'user_pw': req.body.pw
+    'user_id': req.param('id'),
+    'user_pw': req.param('pw')
   }, function(err, sign) {
     if (err) {
       console.err(err);
@@ -180,7 +180,7 @@ app.post('/logoutchk', function(req, res) {
 
 app.post('/articlemake', function(req,res){
   var a = new article();
-  var text = req.body.text;
+  var text = req.param('text');
   var cnt_text = 0;
   while(cnt_text != text.length){
     text = text.replace("\n", "<br/>");
@@ -204,12 +204,12 @@ app.post('/articlemake', function(req,res){
 
 app.post('/signin', function(req, res) {
   var sign = new user();
-  sign.user_id = req.body.id;
-  sign.user_pw = req.body.pw;
-  sign.user_name = req.body.name;
+  sign.user_id = req.param('id');
+  sign.user_pw = req.param('pw');
+  sign.user_name = req.param('name');
   sign.tutor = "true";
   user.findOne({
-    'user_id': req.body.id
+    'user_id': req.param('id')
   }, function(err, sign) {
     if (err) {
       console.err(err);

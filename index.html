@@ -22,10 +22,10 @@
     </div>
   </header>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <script src="http://grooshbene.milkgun.kr/socket.io/socket.io.js"></script>
+  <script src="http://localhost/socket.io/socket.io.js"></script>
   <!--소켓이오 사용시 가장 중요 -->
   <script type="text/javascript">
-    var socket = io.connect('http://grooshbene.milkgun.kr'); //소켓 연결
+    var socket = io.connect('http://localhost'); //소켓 연결
     socket.on('session', function(data) { //소켓에서 메시지1이라는 이름의 메시지가 도착했을때
       data.user_id = data.user_id.replace("undefined", null);
       // session.innerHTML = data.user_id; //데이타 안에서 받아와서 출력
