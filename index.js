@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+var dialog = require('dialog');
 var cookieParser = require('cookie-parser');
 var cookie = require('cookie');
 app.use(cookieParser());
@@ -34,7 +35,8 @@ app.use(serveStatic(__dirname, ({
 })));
 
 var data_base = mongoose.connection;
-var chk = false;
+var chk = "false";
+var emitText = "";
 var id;
 var pw;
 mongoose.connect("mongodb://localhost:27017/sns", function(err) {
@@ -102,17 +104,24 @@ app.get('/', function(req, res) {
   }
   else if(req.session.chk != null && req.session.tutor == "false"){
     res.sendFile(__dirname + "/index.html");
-    article.find({},{_id:0,user_article:1}).exec(function(err,a){
+    article.find({},{_id:0,'user_article':1}).exec(function(err,a){
       if(err){
         console.log(err);
         throw err;
       }
-      var TimeLine = JSON.stringify(a);
-      console.log(TimeLine);
+      console.log(a);
+      var TimeLine = a;
+      var length = TimeLine.length;
+      var tempLength = 0;
       io.on('connection', function(socket) {
+        for(var i=length-1; i>=tempLength; i--){
+        var emit = TimeLine[i].user_article;
         socket.emit('timeline', {
-          timeline: TimeLine
+            timeline : emit
+
         });
+      }
+      tempLength = length;
       });
     })
   }
@@ -137,7 +146,11 @@ app.post('/login', function(req, res) {
       throw err;
     }
     if (sign == null) {
-      res.send("정보가 잘못되었습니다!!");
+      dialog.info("정보가 잘못되었습니다", "Wrong ID/Password", function(err){
+        if(!err){
+          res.redirect('/');
+        }
+      })
     } else {
       console.log(sign);
       req.session.user_id = sign.user_id;
@@ -185,7 +198,11 @@ app.post('/articlemake', function(req,res){
       }
     });
     console.log(a);
-    res.send("OK!");
+    dialog.info("작성이 완료되었습니다!", "Done", function(err){
+      if(!err){
+        res.redirect('/');
+      }
+    })
   }
 });
 
@@ -204,13 +221,22 @@ app.post('/signin', function(req, res) {
       throw err;
     }
     if (sign == null) {
-      chk = true
+      chk = "true"
     }
   });
   if (sign.user_pw < 8) {
-    res.send("비밀번호는 8자리 이상이어야 합니다!");
-  } else if (chk) {
-    res.send("중복되는 아이디 입니다!");
+    dialog.info("비밀번호는 8자리 이상이어야 합니다!", "Wrong Input", function(err){
+      if(!err){
+        res.redirect('/signin');
+      }
+    })
+  } else if (chk == "true") {
+    dialog.info("중복되는 아이디 입니다!","Wrong ID", function(err){
+      if(!err){
+        chk = "false";
+        res.redirect('/signin');
+      }
+    })
   } else {
     sign.save(function(err, silence) {
       if (err) {
@@ -219,6 +245,10 @@ app.post('/signin', function(req, res) {
       }
     });
     console.log(sign);
-    res.send(sign.user_id + " 계정으로 가입 되었습니다.");
+    dialog.info("회원가입이 완료되었습니다!", "Sign In", function(err){
+      if(!err){
+        res.redirect('/');
+      }
+    })
   }
 });

@@ -9,35 +9,50 @@
 
 <body>
   <header class="app-bar promote-layer paper-toolbar paper-shadow">
-  <div class="app-bar-container paper-toolbar">
-    <button class="menu"><img src="http://google.github.io/web-starter-kit/material/images/hamburger.svg" alt="Menu"></button>
-    <h1 class="logo">Material toolbar</h1>
-  </div>
-</header>
+    <div class="app-bar-container paper-toolbar">
+      <button class="menu">
+        <img src="http://google.github.io/web-starter-kit/material/images/hamburger.svg" alt="Menu">
+      </button>
+      <h1 class="logo">SNSProject</h1>
+      <form role="form" action="/logoutchk" method="post" enctype="application/x-www-form-urlencoded">
+        <div class="btn-group">
+          <button class="btn btn-primary">LogOut</button>
+        </div>
+      </form>
+    </div>
+  </header>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="http://127.0.0.1/socket.io/socket.io.js"></script>
   <!--소켓이오 사용시 가장 중요 -->
   <script type="text/javascript">
     var socket = io.connect('http://localhost'); //소켓 연결
     socket.on('session', function(data) { //소켓에서 메시지1이라는 이름의 메시지가 도착했을때
-          data.user_id = data.user_id.replace("undefined", null);
-          session.innerHTML = data.user_id; //데이타 안에서 받아와서 출력
-        });
-    socket.on('timeline',function(data){
-      timeline.innerHTML = data.timeline;
+      data.user_id = data.user_id.replace("undefined", null);
+      // session.innerHTML = data.user_id; //데이타 안에서 받아와서 출력
+      // var newCard = document.createElement('section');
+      // newCard
+    });
+    socket.on('timeline', function(data) {
+      var createCard = document.createElement('section');
+      session.innerHTML = data.timeline;
+      createCard.className = "card";
+      createCard.innerHTML = data.timeline;
+      document.body.appendChild(createCard);
     })
   </script>
   <li id="session"></li>
   <br>
-  <form id="logout" method="post" action="/logoutchk" enctype="application/x-www-form-urlencoded">
-    <input type="submit" value="LogOut">
-  </form>
+  <section class="card">
+    <h1>
+      <strong>32Min</strong>to SIHS</h1>
+    <h2>Sookmyoung W.Univ</h2>
+  </section>
   <h1>내용 입력</h1>
   <form id="makearticle" method="post" action="/articlemake" enctype="application/x-www-form-urlencoded">
     <input type="text" name="text" />
     <input type="submit" name="submit" />
   </form>
-</br>
+  </br>
   <div id="timeline"></div>
 </body>
 
