@@ -53,6 +53,9 @@ var loginSchema = new schema({
   },
   user_name: {
     type: String
+  },
+  tutor:{
+    type: String
   }
 });
 
@@ -75,7 +78,29 @@ app.get('/', function(req, res) {
   console.log(req.session);
   if (req.session.chk == null) {
     res.sendFile(__dirname + "/login.html");
-  } else if (req.session.chk != null) {
+  } else if (req.session.chk != null && req.session.tutor=="true") {
+    res.sendFile(__dirname + "/intro.html");
+    user.update({
+      'user_id' : req.session.user_id
+    },{
+      'tutor' : "false"
+    },function(err){
+      if(err){
+        console.log(err);
+        throw err;
+      }
+    });
+    user.findOne({
+      'user_id' : req.session.user_id
+    }, function(err,sign){
+      if(err){
+        console.log(err);
+        throw err;
+      }
+      req.session.tutor = sign.tutor;
+    })
+  }
+  else if(req.session.chk != null && req.session.tutor == "false"){
     res.sendFile(__dirname + "/index.html");
   }
   io.on('connection', function(socket) {
@@ -83,19 +108,19 @@ app.get('/', function(req, res) {
       user_id: req.session.user_id + " Welcome!"
     });
   });
-  article.find({},{_id:0,user_article:1}).exec(function(err,a){
-    if(err){
-      console.log(err);
-      throw err;
-    }
-    var TimeLine = JSON.stringify(a);
-    console.log(TimeLine);
-    io.on('connection', function(socket) {
-      socket.emit('timeline', {
-        timeline: TimeLine
-      });
-    });
-  })
+  // article.find({},{_id:0,user_article:1}).exec(function(err,a){
+  //   if(err){
+  //     console.log(err);
+  //     throw err;
+  //   }
+  //   var TimeLine = JSON.stringify(a);
+  //   console.log(TimeLine);
+  //   io.on('connection', function(socket) {
+  //     socket.emit('timeline', {
+  //       timeline: TimeLine
+  //     });
+  //   });
+  // })
 });
 
 app.get('/signin', function(req, res) {
@@ -119,6 +144,7 @@ app.post('/login', function(req, res) {
       req.session.user_pw = sign.user_pw;
       req.session.user_name = sign.user_name;
       req.session.chk = 1;
+      req.session.tutor = sign.tutor;
       console.log(req.session);
       res.redirect('/');
     }
@@ -169,6 +195,7 @@ app.post('/signin', function(req, res) {
   sign.user_id = req.body.id;
   sign.user_pw = req.body.pw;
   sign.user_name = req.body.name;
+  sign.tutor = "true";
   user.findOne({
     'user_id': req.body.id
   }, function(err, sign) {

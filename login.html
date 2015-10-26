@@ -4,31 +4,33 @@
 <head>
   <meta charset="utf-8">
   <title>Login Page</title>
+  <link rel="stylesheet" type="text/css" href="./css/login.css"/>
 </head>
 
 <body>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <script src="http://127.0.0.1/socket.io/socket.io.js"></script><!--소켓이오 사용시 가장 중요 -->
-  <script type="text/javascript">
-  var socket = io.connect('http://localhost');//소켓 연결
-  socket.on('session', function (data) {//소켓에서 메시지1이라는 이름의 메시지가 도착했을때
-    data.user_id = data.user_id.replace("undefined", '');
-    welcome.innerHTML = data.user_id;//데이타 안에서 받아와서 출력
-  });
-  </script>
-  <li id="welcome"></li>
-  <form id="login" method="post" action="/login" enctype="application/x-www-form-urlencoded">
-    <h4>아이디</h4>
-    <input type="text" name="id" autofocus="true">
-    <h4>비밀번호</h4>
-    <input type="password" name="pw">
-    <input type="submit" value="LogIn">
-  </form>
-</br>
-</br>
-  <form action="/signin">
-    <input type="submit" value="Sign In">
-  </form>
+  <br>
+  <div class="container">
+    <div id="enter">
+      <h1>LogIn</h1>
+      <p>SnsProject</p>
+      <form role="form" method="post" action="/login" enctype="application/x-www-form-urlencoded">
+        <div class="form-group">
+          <label for="exampleInputID">ID</label>
+          <input type="text" class="form-control" name="id" placeholder="Input ID">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword">Password</label>
+          <input type="password" class="form-control" name="pw" placeholder="Input PW">
+        </div>
+        <button type="submit" class="btn btn-raised btn-primary btn-block ripple-effect">Submit</button>
+      </form>
+      <form role="form" method="get" action="/signin" enctype="application/x-www-form-urlencoded">
+        <div class="form-group">
+          <button type="submit" class="btn btn-raised btn-success btn-block ripple-effect">Sign In</button>
+        </div>
+      </form>
+    </div>
 </body>
 
 </html>
