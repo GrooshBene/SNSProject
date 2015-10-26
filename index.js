@@ -104,7 +104,7 @@ app.get('/', function(req, res) {
   }
   else if(req.session.chk != null && req.session.tutor == "false"){
     res.sendFile(__dirname + "/index.html");
-    article.find({},{_id:0,'user_article':1}).exec(function(err,a){
+    article.find({},{_id:0,'user_article':1,'article_time':1,'user_name':1}).exec(function(err,a){
       if(err){
         console.log(err);
         throw err;
@@ -116,9 +116,12 @@ app.get('/', function(req, res) {
       io.on('connection', function(socket) {
         for(var i=length-1; i>=tempLength; i--){
         var emit = TimeLine[i].user_article;
+        var emit_name = TimeLine[i].user_name;
+        var emit_time = TimeLine[i].article_time
         socket.emit('timeline', {
-            timeline : emit
-
+            timeline : emit,
+            name : emit_name,
+            article_time : emit_time
         });
       }
       tempLength = length;

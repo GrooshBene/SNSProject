@@ -36,7 +36,7 @@
       var createCard = document.createElement('section');
       session.innerHTML = data.timeline;
       createCard.className = "card";
-      createCard.innerHTML = data.timeline;
+      createCard.innerHTML = data.timeline+"<br>게시자: "+data.name+"<br>"+data.article_time;
       document.body.appendChild(createCard);
     })
   </script>
@@ -44,8 +44,8 @@
   <br>
   <section class="card">
     <h1>
-      <strong>32Min</strong>to SIHS</h1>
-    <h2>Sookmyoung W.Univ</h2>
+      <strong>꺄륵!</strong>꺄르륵!</h1>
+    <h2>치킨!</h2>
   </section>
   <h1>내용 입력</h1>
   <form id="makearticle" method="post" action="/articlemake" enctype="application/x-www-form-urlencoded">
