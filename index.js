@@ -102,25 +102,25 @@ app.get('/', function(req, res) {
   }
   else if(req.session.chk != null && req.session.tutor == "false"){
     res.sendFile(__dirname + "/index.html");
+    article.find({},{_id:0,user_article:1}).exec(function(err,a){
+      if(err){
+        console.log(err);
+        throw err;
+      }
+      var TimeLine = JSON.stringify(a);
+      console.log(TimeLine);
+      io.on('connection', function(socket) {
+        socket.emit('timeline', {
+          timeline: TimeLine
+        });
+      });
+    })
   }
   io.on('connection', function(socket) {
     socket.emit('session', {
       user_id: req.session.user_id + " Welcome!"
     });
   });
-  // article.find({},{_id:0,user_article:1}).exec(function(err,a){
-  //   if(err){
-  //     console.log(err);
-  //     throw err;
-  //   }
-  //   var TimeLine = JSON.stringify(a);
-  //   console.log(TimeLine);
-  //   io.on('connection', function(socket) {
-  //     socket.emit('timeline', {
-  //       timeline: TimeLine
-  //     });
-  //   });
-  // })
 });
 
 app.get('/signin', function(req, res) {
