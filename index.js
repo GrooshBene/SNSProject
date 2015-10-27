@@ -80,7 +80,7 @@ app.get('/', function(req, res) {
   console.log(req.session);
   if (req.session.chk == null) {
     res.sendFile(__dirname + "/login.html");
-  } else if (req.session.chk != null && req.session.tutor=="true") {
+  } else if (req.session.chk != null && req.session.tutor == "true") {
     res.sendFile(__dirname + "/intro.html");
     user.update({
       'user_id' : req.session.user_id
@@ -100,6 +100,12 @@ app.get('/', function(req, res) {
         throw err;
       }
       req.session.tutor = sign.tutor;
+      req.session.save(function(err){
+        if(err){
+          console.log(err);
+          throw err;
+        }
+      })
     })
   }
   else if(req.session.chk != null && req.session.tutor == "false"){
@@ -208,29 +214,42 @@ app.post('/signin', function(req, res) {
   sign.user_pw = req.param('pw');
   sign.user_name = req.param('name');
   sign.tutor = "true";
-  user.findOne({
+  user.find({
     'user_id': req.param('id')
-  }, function(err, sign) {
+  }, function(err, signFind) {
     if (err) {
       console.err(err);
       throw err;
     }
-    if (sign == null) {
-      chk = "true"
+    if(sign.user_pw < 8){
+      res.send("비밀번호는 8자리 이상이어야 합니다!");
+    }
+    else if(signFind.length != 0){
+      res.send ("중복되는 아이디 입니다!");
+    }
+    else if(signFind.length == 0){
+      sign.save(function(err, silence){
+        if(err){
+          console.log(err);
+          throw err;
+        }
+        console.log(sign);
+        res.redirect('/');
+      })
     }
   });
-  if (sign.user_pw < 8) {
-    res.send("비밀번호는 8자리 이상이어야 합니다!");
-  } else if (chk == "true") {
-    res.send("중복되는 아이디 입니다!");
-  } else {
-    sign.save(function(err, silence) {
-      if (err) {
-        console.log(err);
-        throw err;
-      }
-    });
-    console.log(sign);
-    res.redirect('/');
-  }
+  // if (sign.user_pw < 8) {
+  //   res.send("비밀번호는 8자리 이상이어야 합니다!");
+  // } else if (chk == "true") {
+  //   res.send("중복되는 아이디 입니다!");
+  // } else {
+  //   sign.save(function(err, silence) {
+  //     if (err) {
+  //       console.log(err);
+  //       throw err;
+  //     }
+  //   });
+  //   console.log(sign);
+  //   chk = "false";
+  //   res.redirect('/');
 });
