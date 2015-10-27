@@ -3,8 +3,8 @@ var mongoose = require('mongoose');
 var serveStatic = require('serve-static');
 var app = express();
 var server = require('http').Server(app);
-server.listen(80);
-console.log("Server Running At Port 80");
+server.listen(8000);
+console.log("Server Running At Port 8000");
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({
@@ -39,7 +39,7 @@ var chk = "false";
 var emitText = "";
 var id;
 var pw;
-mongoose.connect("mongodb://grooshbene.milkgun.kr:27017/sns", function(err) {
+mongoose.connect("mongodb://localhost:27017/sns", function(err) {
   if (err) {
     console.log("Mongoose DB Error!");
     throw (err);
