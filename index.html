@@ -10,30 +10,32 @@
 <body>
   <header class="app-bar promote-layer paper-toolbar paper-shadow">
     <div class="app-bar-container paper-toolbar">
-      <button class="menu">
+      <button class="menu app-bar-button">
         <img src="http://google.github.io/web-starter-kit/material/images/hamburger.svg" alt="Menu">
       </button>
       <h1 class="logo">SNSProject</h1>
       <form role="form" action="/logoutchk" method="post" enctype="application/x-www-form-urlencoded">
         <div class="btn-group">
-          <button class="btn btn-primary">LogOut</button>
+          <button class="app-bar-button btn">LogOut</button>
         </div>
 
       </form>
       <br>
     </div>
-    <section class="card">
-      <form id="makearticle" method="post" action="/articlemake" enctype="application/x-www-form-urlencoded">
+    <div class="headerContainer">
+    <div id="enter">
+      <form role="form" id="makearticle" method="post" action="/articlemake" enctype="application/x-www-form-urlencoded">
       <div class="form-group">
-        <input type="text" name="text" autofocus="on" autocomplete="off" placeholder="당신의 이야기를 나눠보세요!">
+        <input type="text" name="text" autocomplete="off" placeholder="당신만의 이야기를 나눠보세요!">
         <span class="highlight"></span>
         <span class="bar"></span>
       </div>
       <div class="form-group">
-        <button type="submit" class="btn btn-raised btn-success btn-block ripple-effect">Sign In</button>
+        <button type="submit" class="btn btn-raised btn-primary btn-block ripple-effect">Sign In</button>
       </div>
     </form>
-    </section>
+  </div>
+</div>
   </header>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="http://localhost:8000/socket.io/socket.io.js"></script>
@@ -55,6 +57,8 @@
       document.body.appendChild(createCard);
     })
   </script>
+  <section class="card">
+    <h1><strong>위쪽</strong>에 커서를 올려 댓글을 작성해보세요!</h1>
 </body>
 
 </html>
