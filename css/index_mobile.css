@@ -8,8 +8,8 @@ input 				{
   font-size:18px;
   padding:10px 10px 10px 10px;
   display:block;
-  width:95%;
-  height: 100px;
+  width:90%;
+  height: 50px;
   border:none;
   border-bottom:1px solid #757575;
 }
@@ -164,6 +164,10 @@ header{
 z-index:2
 }
 
+#headerform{
+  margin-top: 0;
+}
+
 .paper-shadow {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
 }
@@ -237,7 +241,7 @@ button.menu img {
 }
 
 body{
-  padding-top: 64px;
+  padding-top: 324px;
 }
 
 /* -- import Bootstrap v3 --------------------------- */
