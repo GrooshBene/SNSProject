@@ -18,8 +18,22 @@
         <div class="btn-group">
           <button class="btn btn-primary">LogOut</button>
         </div>
+
       </form>
+      <br>
     </div>
+    <section class="card">
+      <form id="makearticle" method="post" action="/articlemake" enctype="application/x-www-form-urlencoded">
+      <div class="form-group">
+        <input type="text" name="text" placeholder="당신의 이야기를 나눠보세요!">
+        <span class="highlight"></span>
+        <span class="bar"></span>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-raised btn-success btn-block ripple-effect">Sign In</button>
+      </div>
+    </form>
+    </section>
   </header>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="http://localhost:8000/socket.io/socket.io.js"></script>
@@ -34,32 +48,13 @@
     });
     socket.on('timeline', function(data) {
       var createCard = document.createElement('section');
-      session.innerHTML = data.timeline;
+      // session.innerHTML = data.timeline;
       createCard.className = "card";
             createCard.innerHTML = "<h2>"+data.article_time+"</h2><br>"+"<h1>"+data.timeline+"</h1><br><h2><strong>게시자: "+data.name+"</strong></h2>";
 
       document.body.appendChild(createCard);
     })
   </script>
-  <li id="session"></li>
-  <br>
-  <section class="card">
-    <h1>
-      <strong>꺄륵!</strong>꺄르륵!</h1>
-    <h2>치킨!</h2>
-  </section>
-<section class="card">
-	<form id="makearticle" method="post" action="/articlemake" enctype="application/x-www-form-urlencoded">
-	<div class="form-group">
-		<input type="text" name="text" placeholder="당신의 이야기를 나눠보세요!">
-		<span class="highlight"></span>
-		<span class="bar"></span>
-    <br>
-    <button type="submit" class="btn btn-raised btn-primary btn-block ripple-effect">Submit</button>
-	</div>
-</form>
-</section>
-  </br>
 </body>
 
 </html>

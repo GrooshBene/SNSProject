@@ -120,7 +120,7 @@ app.get('/', function(req, res) {
       var length = TimeLine.length;
       var tempLength = 0;
       io.on('connection', function(socket) {
-        for(var i=length-1; i>=tempLength; i--){
+        for(var i=length-1; i>tempLength; i--){
         var emit = TimeLine[i].user_article;
         var emit_name = TimeLine[i].user_name;
         var emit_time = TimeLine[i].article_time
