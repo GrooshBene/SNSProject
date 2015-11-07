@@ -164,7 +164,7 @@ app.post('/login', function(req, res) {
       req.session.chk = 1;
       req.session.tutor = sign.tutor;
       console.log(req.session);
-      res.redirect('/');
+      res.send(200,sign);
     }
   });
 });
@@ -175,7 +175,7 @@ app.post('/logoutchk', function(req, res) {
       console.log(err);
       throw err;
     }
-    res.redirect('/');
+    res.send(200,"Logout Successfully");
   });
   io.on('connection', function(socket) {
     socket.emit('session', {
@@ -198,9 +198,20 @@ app.post('/articlemake', function(req,res){
       }
     });
     console.log(a);
-    res.redirect('/');
+    res.send(200,a);
   }
 });
+
+app.post('/articlelist', function(req,res){
+	article.find({$query:{},$orderby:{article_time : -1}},function(err,result){
+				if(err){
+					console.err(err);
+					throw err;
+				}
+				console.log(result);
+				res.send(200,result)
+		});
+	});
 
 
 app.post('/signin', function(req, res) {
@@ -229,7 +240,7 @@ app.post('/signin', function(req, res) {
           throw err;
         }
         console.log(sign);
-        res.redirect('/');
+        res.send(200,sign);
       })
     }
   });
